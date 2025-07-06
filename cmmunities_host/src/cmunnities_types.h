@@ -1,7 +1,8 @@
-#include "stdint.h"
-
 #ifndef CMMUNITIES_TYPES_H
 #define CMMUNITIES_TYPES_H
+
+#include "stdint.h"
+
 enum Permissions{
     READONLY,
     BASIC,
@@ -15,7 +16,7 @@ typedef uint32_t* id_list;
 struct Channel{
     id_list grey_list;
     char* channel_name;
-    bool exclusive;
+    bool is_exclusive;
     id_list writers;
 };
 

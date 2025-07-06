@@ -7,10 +7,10 @@
 #define CHANNEL_DB_NAME "cmmunities_channels.db"
 
 // Returns total number of channels in community
-uint32_t num_channels(); 
+uint32_t num_channels(sqlite3* channel_db); 
 
 // Returns list of all channels and their names
-uint32_t list_channels(char** buf, sqlite3* db); 
+uint32_t list_channels(sqlite3* channel_db, char** buf); 
 
 // Returns false if channel does not exist
 bool get_channel(struct Channel* placeholder, const char* name);
