@@ -1,11 +1,11 @@
 #include "stdlib.h"
-#include "stdio.h"
 #include "stdint.h"
 #include <string.h>
 
 #include "sqlite3.h"
 
-#include "cmmunities_host/src/cmunnities_types.h"
+#include "cmunnities_types.h"
+
 #include "log.h"
 
 
@@ -61,10 +61,24 @@ uint32_t list_channels(sqlite3* channel_db, char** buf){
     return i + 1;
 }
 
+uint32_t insert_channel(sqlite3* channel_db, const struct Channel* to_insert){
+    const char* query = "INSERT INTO cmmunities_channel_info VALUES (?, ?, ?, ?, ?)";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(channel_db, query, -1, &stmt, 0) != SQLITE_OK){
+        logf("Failed to prepare statement: %s", sqlite3_errmsg(channel_db));
+        return -1;
+    }
+
+    
+
+
+}
+
 int get_channel(sqlite3* channel_db, struct Channel* placeholder, const char* name){
 
-    sqlite3_stmt* stmt;
     char* query = "SELECT * FROM cmmunities_channel_info WHERE channel_name = ?;";
+    sqlite3_stmt* stmt;
 
     if (sqlite3_prepare_v2(channel_db, query, -1, &stmt, NULL) == SQLITE_OK){
         sqlite3_bind_text(stmt, 1, name, -1, SQLITE_STATIC);

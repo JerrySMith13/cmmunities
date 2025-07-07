@@ -5,8 +5,15 @@
 #include "stdbool.h"
 #include"assert.h"
 #include "stdlib.h"
+#include <stdint.h>
 
 #define static_assert _Static_assert
+
+struct id_list{
+    uint32_t* head;
+    uint32_t length;
+};
+
 enum Permissions{
     READONLY,
     BASIC,
@@ -14,26 +21,23 @@ enum Permissions{
     SUPERUSER
 };
 
-typedef uint32_t userid;
-typedef uint32_t* id_list;
-typedef uint32_t channelid;
 
 #define CHANNEL_FIELD_COUNT 5
 struct Channel{
-    channelid id;
-    id_list grey_list;
+    uint32_t channel_id;
     char* channel_name;
-    bool is_exclusive;
-    id_list writers;
+    bool readonly;
+    struct id_list whitelist;
+    struct id_list blacklist;
     
 };
 
 enum ChannelMembers{
-    id,
-    grey_list,
+    channel_id,
     channel_name,
-    is_exclusive,
-    writers,
+    readonly,
+    whitelist,
+    blacklist,
     CHANNELMEMBERS_NUM_FIELDS
 };
 
@@ -41,14 +45,14 @@ static_assert(CHANNEL_FIELD_COUNT == CHANNELMEMBERS_NUM_FIELDS);
 
 #define USER_FIELD_COUNT 3
 struct User{
-    uint32_t id;
+    uint32_t user_id;
     char* username;
     enum Permissions perm_level;
 
 };
 
 enum UserMembers{
-    id,
+    user_id,
     username,
     perm_level,
     USERMEMBERS_NUM_FIELDS,
@@ -61,8 +65,8 @@ static_assert(USER_FIELD_COUNT == USERMEMBERS_NUM_FIELDS);
 struct Message{
     char* contents;
     uint64_t timestamp;
-    userid sender;
-    char* sent_to;
+    uint32_t sender;
+    uint32_t channel_posted;
 
 };
 
@@ -70,7 +74,7 @@ enum MessageMembers{
     contents,
     timestamp,
     sender,
-    sent_to,
+    channel_posted,
     MESSAGEMEMBERS_NUM_FIELDS,
 };
 

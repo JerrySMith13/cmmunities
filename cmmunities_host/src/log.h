@@ -3,6 +3,6 @@
 
 void log(const char* msg);
 
-void logf(const char* format, ...)
+void logf(const char* format, ...);
 
 #endif
