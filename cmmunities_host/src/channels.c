@@ -5,6 +5,7 @@
 
 #include "sqlite3.h"
 
+#include "cmmunities_host/src/cmunnities_types.h"
 #include "log.h"
 
 
@@ -57,4 +58,31 @@ uint32_t list_channels(sqlite3* channel_db, char** buf){
         strcpy(name, buf[i]);
         i++;
     }
+    return i + 1;
+}
+
+int get_channel(sqlite3* channel_db, struct Channel* placeholder, const char* name){
+
+    sqlite3_stmt* stmt;
+    char* query = "SELECT * FROM cmmunities_channel_info WHERE channel_name = ?;";
+
+    if (sqlite3_prepare_v2(channel_db, query, -1, &stmt, NULL) == SQLITE_OK){
+        sqlite3_bind_text(stmt, 1, name, -1, SQLITE_STATIC);
+
+        int counter = 0;
+        while (sqlite3_step(stmt) == SQLITE_ROW){
+            switch (counter){
+                
+                
+            }
+        }
+    }
+
+};
+
+void free_str_list(char** list, uint32_t len){
+    for (uint32_t i = 0; i < len; i++){
+        free(list[i]);
+    }
+    free(list);
 }
