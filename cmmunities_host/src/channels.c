@@ -63,10 +63,6 @@ uint32_t list_channels(sqlite3* channel_db, char** buf){
     return i + 1;
 }
 
-static void load_channel_into_query(sqlite3_stmt* stmt, const struct Channel* load, const char* query){
-
-};
-
 static int insert_into_list(sqlite3* db, uint32_t channel_id, const struct id_list* list, bool is_blacklist){
     sqlite3_stmt* stmt;
     char* query;
@@ -98,11 +94,13 @@ static int insert_into_list(sqlite3* db, uint32_t channel_id, const struct id_li
 
 }
 
-bool channel_exists(sqlite3* channel_db, ){
-    
+static bool channel_exists(sqlite3* channel_db, const struct Channel* ){
+
 }
 
-uint32_t insert_channel(sqlite3* channel_db, const struct Channel* to_insert){
+
+//SHOULD NOT BE USED DIRECTLY, instead use 
+static uint32_t insert_channel_into_db(sqlite3* channel_db, const struct Channel* to_insert){
     const char* query = "INSERT INTO cmmunities_channel_info VALUES (?, ?, ?, ?, ?);";
     sqlite3_stmt* stmt;
 
@@ -135,10 +133,26 @@ uint32_t insert_channel(sqlite3* channel_db, const struct Channel* to_insert){
 
     sqlite3_finalize(stmt);
 
-    char* create_msg_table_query = "CREATE TABLE "
+    char* create_msg_table_query = "CREATE TABLE ? ( \
+        contents TEXT,  \
+        timestamp INTEGER, \
+        sender INTEGER, \
+        channel_posted INTEGER \
+    );";
+
+    sqlite3_stmt* message_table_statement;
+
+    sqlite3_prepare_v2(channel_db, message_table_statement, -1, &message_table_statement, NULL);
+    sqlite3_bind_text(message_table_statement, 1, create_msg_table_query, -1, SQLITE_STATIC);
+    if (sqlite3_step(message_table_statement) != SQLITE_DONE){
+        logf("Error creating message database for channel %s: %s", to_insert->channel_name, sqlite3_errmsg(channel_db));
+        return -1;
+    }
+    sqlite3_finalize(message_table_statement);
 
     return SQLITE_OK;
 }
+
 
 
 
@@ -284,6 +298,7 @@ uint32_t get_channel(sqlite3* channel_db, struct Channel* placeholder, const cha
 
         fill_channel_blacklist(channel_db, placeholder);
         fill_channel_whitelist(channel_db, placeholder);
+    }
 }
 
 
