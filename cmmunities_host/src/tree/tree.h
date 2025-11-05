@@ -22,25 +22,44 @@ The header of the file contains:
 #include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
+
+#define _GNU_SOURCE
 #include <fcntl.h>
 #include <unistd.h>
 
 #include <errno.h>
 
 #define TREE_HEADER_SIZE 8;
+#define NUM_HEADERS 3
 #define ENTRY_SIZE 36
+#define FIRST_ROOT_INDEX TREE_HEADER_SIZE * NUM_HEADERS
+
+
+typedef struct Tree{
+  int underlying_fd;
+  uint64_t len;
+  off_t end_of_entries;
+  off_t  free_indexes_start;
+  
+} Tree;
+
+static void create_tree(int fd, off_t free_index_offset);
+int open_tree(char* name, Tree* surrogate);
+
 
 int open_tree(char* name, Tree* surrogate){
   int fd;
   off_t offset = 0;
 
-  uint64_t len, end_of_entries, free_indexes_start;
+  uint64_t len;
+  off_t  end_of_entries, free_indexes_start;
   fd = open(name, O_RDWR | O_EXCL | O_CREAT);
   if (fd != -1) {
     create_tree(fd, 10);
+    if (errno != EEXIST) return -1; //Error Handling needed
   }
-  else if (errno != EEXIST) return -1; //Error Handling needed
-
+  else fd = open(name, O_RDWR);
+   
   if (lseek(fd, offset, SEEK_SET) == -1) return -1; //Error Handling needed
   if (read(fd, &len, 8) <= 0) return -1; //Error Handling needed
   offset += 8;
@@ -58,14 +77,6 @@ int open_tree(char* name, Tree* surrogate){
   return 0;
 }
 //ONLY CALLED if the file was JUST opened
-static void create_tree(int fd, size_t free_index_offset){
-  
+static void create_tree(int fd, off_t free_index_offset){
+    posix_fallocate()
 }
-
-typedef struct Tree{
-  int underlying_fd;
-  uint64_t len;
-  uint64_t end_of_entries;
-  uint64_t free_indexes_start;
-  
-} Tree;
