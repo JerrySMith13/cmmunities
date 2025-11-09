@@ -36,6 +36,8 @@ header length is 12 bytes
 therefore, position of first unallocated entry (in bytes) is: header length + (num_entries * entry_size)
 */
 
+#include <cstdint>
+#include <cstdio>
 #include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -75,6 +77,7 @@ int open_tree(char* name, Tree* surrogate){
   else fd = open(name, O_RDWR);
 
   if (fd == -1) return -1; //Error handling needed
+  
 
 
   
@@ -84,8 +87,19 @@ int close_tree(Tree* self){
 
 }
 //ONLY CALLED if the file was JUST opened
-static int create_tree(int fd, off_t free_index_offset){
+// free_index_offset is the index at which the unwritten entries end, and the list of free entries may begin. 
+static int create_tree(int fd, off_t free_index_offset, ){
     if (posix_fallocate(fd, 0, (NUM_HEADERS * TREE_HEADER_SIZE) + (free_index_offset * ENTRY_SIZE)) != 0) return -1; //Error handling needed
+
+    off_t offset = 0;
+    uint64_t size = 0;
+    if (lseek(fd, offset, SEEK_SET) == -1) return -1; //error handling needed
+    if (write(fd, &size, sizeof(uint64_t)) == -1) return -1;
+    offset += sizeof(uint64_t);
+    if (lseek(fd, offset, SEEK_SET) == -1) return -1; //error handling needed
+
+    
+    
     
 
 
