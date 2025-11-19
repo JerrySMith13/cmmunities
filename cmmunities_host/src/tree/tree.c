@@ -1,27 +1,5 @@
 #include "tree.h"
 
-int posix_fallocate(int fd, off_t offset, off_t size){
-  fstore_t store = {
-        .fst_flags = F_ALLOCATECONTIG,   // try contiguous first
-        .fst_posmode = F_PEOFPOSMODE,    // allocate from EOF
-        .fst_offset = offset,
-        .fst_length = size,
-        .fst_bytesalloc = 0
-    };
-
-    // Try contiguous allocation
-    if (fcntl(fd, F_PREALLOCATE, &store) == -1) {
-        // Fallback: allocate fragmented
-        store.fst_flags = F_ALLOCATEALL;
-        if (fcntl(fd, F_PREALLOCATE, &store) == -1) {
-            return -1;   // failed completely
-        }
-    }
-
-    // Extend the file to the allocated size
-    return ftruncate(fd, size);
-};
-
 int open_tree(const char* name, Tree* surrogate){
   int fd;
   off_t offset = 0;
@@ -49,6 +27,7 @@ int open_tree(const char* name, Tree* surrogate){
 
 int close_tree(Tree* self){
   close(self->underlying_fd);
+  return 0;
 }
 
 int create_tree(int fd, uint32_t free_index_offset){

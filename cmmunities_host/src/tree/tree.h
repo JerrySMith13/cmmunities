@@ -60,12 +60,6 @@ therefore, position of first unallocated entry (in bytes) is: header length + (n
 
 #define ENTRY_NAME_LEN 20
 
-#ifdef __APPLE__
-#include <sys/stat.h>
-int posix_fallocate(int fd, off_t offset, off_t size);
-#endif
-
-
 typedef struct Tree{
   int underlying_fd;
   uint32_t len;
