@@ -1,14 +1,4 @@
-/*
-
-
-
-
-
-
-*/
-
-int main(int nargs, char** args){
-    //  Daemon:
+//  Daemon:
     //      Input: This is boilerplate daemon startup. read a toml file (conf or WHATEVER) and parse it to object
     //      Use object to determine which port to listen on, which server identifiers are valid and their matching CONSTANT SERVER IDS     
     //      Open database files and load caches into memory
@@ -35,9 +25,11 @@ int main(int nargs, char** args){
     //      output: write to UI
 
 
+int main(int nargs, char** args){
+    
 
 
-    // internal host 
+
 }
 
 
@@ -54,3 +46,13 @@ int main(int nargs, char** args){
 // step 1: for non-static requests, use cwd for cmmunity root
 // step 2: use cwd + data recieved in invocation PLUS global config file to create request context
 // step 3: update data in repo and return requested data
+
+
+/*
+
+---- FRAMEWORKING: the usability ----
+Data: client-side - conf folder (similar to manifest) that tells client where to talk to people, what kind of conf the server uses, etc.
+Data: server-side - folder similar to .git which holds message data
+
+
+*/
