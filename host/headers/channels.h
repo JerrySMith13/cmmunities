@@ -1,12 +1,18 @@
 #ifndef MESSAGING_H
 #define MESSAGING_H
-#include "global_types.h"
+#include "../global_types.h"
+
 typedef struct Message{
     cid channel_id;
     uid sender;
     char* words;
 } Message;
 
+typedef struct Channel{
+    gid group;
+    cid id;
+    char* name;
+} Channel;
  
 int build_msg(const char* data, Message* surrogate);
 

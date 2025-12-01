@@ -10,6 +10,9 @@ To save time, cache a built file that can be directly cast to C struct with a ha
 #include <stdlib.h>
 typedef struct ConfObject{
     char* cmmunity_root; //Represents cmmunity root dir, where all database files and associated config is stored
+    char* cmmunity_userdata;
+    char* cmmunity_groupdata;
+    
 } ConfObject;
 
 
