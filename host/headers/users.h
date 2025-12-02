@@ -2,6 +2,7 @@
 #define USERS_H
 
 #include "../global_types.h"
+#include <fcntl.h>
 
 typedef struct User{
     char* name;
@@ -24,7 +25,7 @@ int get_group(gid id, Group* surrogate);
 int groupadd(char* name, uid* to_add);
 int groupdel(gid to_del);
 
-
+off_t seek_mid_line(int fd, off_t fsize);
 
 
 #endif

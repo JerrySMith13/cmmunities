@@ -7,5 +7,6 @@ typedef uint32_t uid;
 typedef uint32_t gid;
 typedef uint32_t cid;
 
+typedef uint16_t permissions; //16-bit little endian integer that represents a file mode
 
 #endif
